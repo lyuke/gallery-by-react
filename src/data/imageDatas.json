@@ -1,49 +1,43 @@
-[{
-		"fileName": "1.jpg",
+[
+
+	{
+		"fileName": "1.png",
 		"title": "my title",
 		"desc": "a photo"
 	}, {
-		"fileName": "2.jpg",
+		"fileName": "2.png",
 		"title": "my title",
 		"desc": "a photo"
 	}, {
-		"fileName": "3.jpg",
+		"fileName": "3.png",
 		"title": "my title",
 		"desc": "a photo"
 	}, {
-		"fileName": "4.jpg",
+		"fileName": "4.png",
 		"title": "my title",
 		"desc": "a photo"
 	}, {
-		"fileName": "5.jpg",
+		"fileName": "5.png",
 		"title": "my title",
 		"desc": "a photo"
 	}, {
-		"fileName": "6.jpg",
+		"fileName": "6.png",
 		"title": "my title",
 		"desc": "a photo"
 	}, {
-		"fileName": "7.jpg",
+		"fileName": "7.png",
 		"title": "my title",
 		"desc": "a photo"
 	}, {
-		"fileName": "8.jpg",
+		"fileName": "8.png",
 		"title": "my title",
 		"desc": "a photo"
 	}, {
-		"fileName": "9.jpg",
+		"fileName": "9.png",
 		"title": "my title",
 		"desc": "a photo"
 	}, {
-		"fileName": "10.jpg",
-		"title": "my title",
-		"desc": "a photo"
-	}, {
-		"fileName": "11.jpg",
-		"title": "my title",
-		"desc": "a photo"
-	}, {
-		"fileName": "12.jpg",
+		"fileName": "10.png",
 		"title": "my title",
 		"desc": "a photo"
 	}
