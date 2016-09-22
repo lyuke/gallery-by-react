@@ -1,7 +1,7 @@
 require('styles/App.scss');
 
 import React from 'react';
-
+import ReactDOM from 'react-dom';
 
 let imageDatas = require('../data/imageDatas.json');
 
@@ -17,8 +17,13 @@ imageDatas = genImageURL(imageDatas);
 class ImgFigure extends React.Component {
 
 	render() {
+		let styleObj = {};
+		if (this.props.arrange.pos) {
+			styleObj = this.props.arrange.pos;
+		}
+
 		return (
-			<figure className="img-figure">
+			<figure className="img-figure" style={styleObj}>
 				<img src={this.props.data.imageURL}
 				alt={this.props.data.title} />
 				<figcaption>
@@ -31,20 +36,157 @@ class ImgFigure extends React.Component {
 
 }
 
+const getRangeRandom = (low, high) => Math.ceil(Math.random() * (high - low) + low);
 
 
 class AppComponent extends React.Component {
+
+	constructor(props) {
+		super(props);
+
+		this.Constant = {
+			centerPos: {
+				left: 0,
+				right: 0
+			},
+			hPosRange: {
+				leftSecX: [0, 0],
+				rightSecX: [0.0],
+				y: [0, 0]
+			},
+			vPosRange: {
+
+				//垂直方向范围
+				x: [0, 0],
+				topY: [0, 0]
+			}
+
+		};
+		this.state = {
+			imgsArrangeArr: [
+				// pos {
+				// 	left: '0',
+				// 	right: '0'
+				// }
+			]
+		};
+
+
+	}
+
+
+
+	rearrange(centerIndex) {
+		let imgsArrangeArr = this.state.imgsArrangeArr,
+			Constant = this.Constant,
+			centerPos = Constant.centerPos,
+			hPosRange = Constant.hPosRange,
+			vPosRange = Constant.vPosRange,
+			hPosRangeLeftSecX = hPosRange.leftSecX,
+			hPosRangeRightSecX = hPosRange.rightSecX,
+			hPosRangeY = hPosRange.y,
+			vPosRangeTopY = vPosRange.topY,
+			vPosRangeX = vPosRange.x,
+
+			imgsArrangeTopArr = [],
+			topImgNum = Math.floor(Math.random() * 2), //取一个或者不取
+			topImgSpliceIndex = 0,
+			imgsArrangeCenterArr = imgsArrangeArr.splice(centerIndex, 1);
+
+		imgsArrangeCenterArr[0].pos = centerPos;
+
+		//取出上侧图片状态
+		topImgSpliceIndex = Math.ceil(Math.random() * (imgsArrangeArr.length - topImgNum));
+		imgsArrangeTopArr = imgsArrangeArr.splice(topImgSpliceIndex, topImgNum);
+
+		imgsArrangeTopArr.forEach(function(value, index) {
+			imgsArrangeArr[index].pos = {
+				left: getRangeRandom(vPosRangeX[0], vPosRangeX[1]),
+				top: getRangeRandom(vPosRangeTopY[0], vPosRangeTopY[1])
+			}
+
+		});
+
+		for (let i = 0, j = imgsArrangeArr.length, k = j / 2; i < j; i++) {
+			let hPosRangeLORX = null;
+			if (i < k) {
+				hPosRangeLORX = hPosRangeLeftSecX;
+			} else {
+				hPosRangeLORX = hPosRangeRightSecX;
+			}
+			imgsArrangeArr[i].pos = {
+				top: getRangeRandom(hPosRangeY[0], hPosRangeY[1]),
+				left: getRangeRandom(hPosRangeLORX[0], hPosRangeLORX[1])
+			}
+		}
+
+		if (imgsArrangeTopArr && imgsArrangeTopArr[0]) {
+			imgsArrangeArr.splice(topImgSpliceIndex, 0, imgsArrangeTopArr[0]);
+		}
+		imgsArrangeArr.splice(centerIndex, 0, imgsArrangeCenterArr[0]);
+
+
+		this.setState({
+			imgsArrangeArr: imgsArrangeArr
+		});
+
+
+
+	}
+
+	componentDidMount() {
+		let stageDom = ReactDOM.findDOMNode(this.refs.stage);
+		let stageW = stageDom.scrollWidth;
+		let stageH = stageDom.scrollHeight;
+		let halfStageW = Math.ceil(stageW / 2);
+		let halfStageH = Math.ceil(stageH / 2);
+
+		let imageFigureDOM = ReactDOM.findDOMNode(this.refs.imgFigure0);
+		let imgW = imageFigureDOM.scrollWidth;
+		let imgH = imageFigureDOM.scrollHeight;
+		let halfImgW = Math.ceil(imgW / 2);
+		let halfImgH = Math.ceil(imgH / 2);
+
+		this.Constant.centerPos = {
+			left: halfStageW - halfImgW,
+			top: halfStageH - halfImgH
+		}
+
+		this.Constant.hPosRange.leftSecX[0] = -halfImgW;
+		this.Constant.hPosRange.leftSecX[1] = halfStageW - halfImgW * 3;
+		this.Constant.hPosRange.rightSecX[0] = halfStageW + halfImgW;
+		this.Constant.hPosRange.rightSecX[1] = stageW - halfImgW;
+		this.Constant.hPosRange.y[0] = -halfImgH;
+		this.Constant.hPosRange.y[1] = stageH - halfImgH;
+
+		this.Constant.vPosRange.topY[0] = -halfImgH;
+		this.Constant.vPosRange.topY[1] = halfStageH - halfImgH * 3;
+		this.Constant.vPosRange.x[0] = halfStageW - imgW;
+		this.Constant.vPosRange.x[1] = halfStageW;
+
+		this.rearrange(0);
+	}
+
 	render() {
 		let controllerUnits = [],
 			imgFigures = [];
 
-		imageDatas.forEach(function(img) {
-			imgFigures.push(<ImgFigure data={img} key={img.fileName}/>);
-		})
+		imageDatas.forEach(function(img, index) {
+			if (!this.state.imgsArrangeArr[index]) {
+				this.state.imgsArrangeArr[index] = {
+					pos: {
+						left: 0,
+						right: 0
+					}
+				}
+			}
+
+			imgFigures.push(<ImgFigure data={img} key={img.fileName} ref={'imgFigure'+index} arrange={this.state.imgsArrangeArr[index]}/>);
+		}.bind(this));
 
 
 		return (
-			<section className="stage">
+			<section className="stage" ref="stage">
 				<section className="img-sec">
 					{imgFigures}
 				</section>
