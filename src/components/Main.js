@@ -21,6 +21,9 @@ class ImgFigure extends React.Component {
 		if (this.props.arrange.pos) {
 			styleObj = this.props.arrange.pos;
 		}
+		if (this.props.arrange.rotate) {
+			styleObj['transform'] = 'rotate(' + this.props.arrange.rotate + 'deg)';
+		}
 
 		return (
 			<figure className="img-figure" style={styleObj}>
@@ -36,7 +39,14 @@ class ImgFigure extends React.Component {
 
 }
 
+//获取随机值
 const getRangeRandom = (low, high) => Math.ceil(Math.random() * (high - low) + low);
+
+//获取
+const get30DegRandom = () => {
+	return (Math.random() > 0.5 ? '' : '-') + Math.ceil(Math.random() * 30);
+}
+
 
 
 class AppComponent extends React.Component {
@@ -68,6 +78,7 @@ class AppComponent extends React.Component {
 				// 	left: '0',
 				// 	right: '0'
 				// }
+				//rotate:0
 			]
 		};
 
@@ -95,14 +106,19 @@ class AppComponent extends React.Component {
 
 		imgsArrangeCenterArr[0].pos = centerPos;
 
+		imgsArrangeCenterArr[0].rotate = 0;
+
 		//取出上侧图片状态
 		topImgSpliceIndex = Math.ceil(Math.random() * (imgsArrangeArr.length - topImgNum));
 		imgsArrangeTopArr = imgsArrangeArr.splice(topImgSpliceIndex, topImgNum);
 
 		imgsArrangeTopArr.forEach(function(value, index) {
-			imgsArrangeArr[index].pos = {
-				left: getRangeRandom(vPosRangeX[0], vPosRangeX[1]),
-				top: getRangeRandom(vPosRangeTopY[0], vPosRangeTopY[1])
+			imgsArrangeArr[index] = {
+				pos: {
+					left: getRangeRandom(vPosRangeX[0], vPosRangeX[1]),
+					top: getRangeRandom(vPosRangeTopY[0], vPosRangeTopY[1])
+				},
+				rotate: get30DegRandom()
 			}
 
 		});
@@ -114,9 +130,12 @@ class AppComponent extends React.Component {
 			} else {
 				hPosRangeLORX = hPosRangeRightSecX;
 			}
-			imgsArrangeArr[i].pos = {
-				top: getRangeRandom(hPosRangeY[0], hPosRangeY[1]),
-				left: getRangeRandom(hPosRangeLORX[0], hPosRangeLORX[1])
+			imgsArrangeArr[i] = {
+				pos: {
+					top: getRangeRandom(hPosRangeY[0], hPosRangeY[1]),
+					left: getRangeRandom(hPosRangeLORX[0], hPosRangeLORX[1])
+				},
+				rotate: get30DegRandom()
 			}
 		}
 
@@ -177,7 +196,8 @@ class AppComponent extends React.Component {
 					pos: {
 						left: 0,
 						right: 0
-					}
+					},
+					rotate: 0
 				}
 			}
 
