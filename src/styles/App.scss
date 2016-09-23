@@ -34,12 +34,11 @@ html,body{
   @at-root{
     .img-figure{
       img{
-        width: 200px;
-        height: 200px;
+        width:100%;
       }
       position: absolute;
       width: 320px;
-      height: 360px;
+      height: 430px;
       margin: 0;
       padding: 40px;
       background-color: white;
