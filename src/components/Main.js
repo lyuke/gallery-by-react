@@ -60,12 +60,46 @@ class ImgFigure extends React.Component {
 
 }
 
+class ControllerUnit extends React.Component {
+
+	constructor() {
+		super();
+		this.handleClick = this.handleClick.bind(this);
+	}
+	handleClick(e) {
+		if (this.props.arrange.isCenter) {
+			this.props.inverse();
+		} else {
+			this.props.center();
+		}
+		e.stopPropagation();
+		e.preventDefault();
+	}
+	render() {
+		let controllerUnitClassName = "controller-unit";
+
+		if (this.props.arrange.isCenter) {
+			controllerUnitClassName += " is-center";
+			if (this.props.arrange.isInverse) {
+				controllerUnitClassName += ' is-inverse';
+			}
+		}
+
+		return (
+			<span className={controllerUnitClassName} onClick={this.handleClick}></span>
+
+		)
+	}
+}
+
+
+
 //获取随机值
-const getRangeRandom = (low, high) => Math.ceil(Math.random() * (high - low) + low);
+const getRangeRandom = (low, high) => Math.floor(Math.random() * (high - low) + low);
 
 //获取
 const get30DegRandom = () => {
-	return (Math.random() > 0.5 ? '' : '-') + Math.ceil(Math.random() * 30);
+	return (Math.random() > 0.5 ? '' : '-') + Math.floor(Math.random() * 30);
 }
 
 
@@ -148,7 +182,7 @@ class AppComponent extends React.Component {
 
 
 		//取出上侧图片状态
-		topImgSpliceIndex = Math.ceil(Math.random() * (imgsArrangeArr.length - topImgNum));
+		topImgSpliceIndex = Math.floor(Math.random() * (imgsArrangeArr.length - topImgNum));
 		imgsArrangeTopArr = imgsArrangeArr.splice(topImgSpliceIndex, topImgNum);
 
 		imgsArrangeTopArr.forEach(function(value, index) {
@@ -248,7 +282,9 @@ class AppComponent extends React.Component {
 			 arrange={this.state.imgsArrangeArr[index]} 
 			 inverse={this.inverse(index)}
 			 center={this.center(index)} />);
-
+			controllerUnits.push(<ControllerUnit key={img.fileName} arrange={this.state.imgsArrangeArr[index]} 
+			inverse={this.inverse(index)} 
+			center={this.center(index)} />)
 		});
 
 
